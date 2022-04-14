@@ -1,0 +1,63 @@
+﻿@using Test.Scopes.App.Models.Customers.Requests
+@inject HttpClient Http
+
+<BSModal IsCentered="true" DataId="createCustomer" OnHide="OnClose">
+    <Header>Create Customer</Header>
+
+    <Content>
+        <div class="mb-3">
+            <BSLabel>Login</BSLabel>
+            <BSInput InputType="InputType.Text" @bind-Value="CreateCustomer.Login" />
+        </div>
+        <div class="mb-3">
+            <BSLabel>Password</BSLabel>
+            <BSInput InputType="InputType.Text" @bind-Value="CreateCustomer.Password" />
+        </div>
+        <div class="mb-3">
+            <BSLabel>Name</BSLabel>
+            <BSInput InputType="InputType.Text" @bind-Value="CreateCustomer.Name" />
+        </div>
+        <div class="mb-3">
+            <BSLabel>Birth date</BSLabel>
+            <BSInput InputType="InputType.Date" @bind-Value="CreateCustomer.BirthDate" />
+        </div>
+
+        <div class="mb-3">
+            <BSLabel>E-mail</BSLabel>
+            <BSInput InputType="InputType.Email" @bind-Value="CreateCustomer.Contact.Email" />
+        </div>
+
+        <div class="mb-3">
+            <BSLabel>Phone</BSLabel>
+            <BSInput InputType="InputType.Tel" @bind-Value="CreateCustomer.Contact.Phone" />
+        </div>
+    </Content>
+
+    <Footer Context="modal">
+        <BSButton Color="BSColor.Success"
+                  OnClick="async () => {
+                    await modal.HideAsync();
+                    await CreateAsync();
+                  }">
+            Create
+        </BSButton>
+    </Footer>
+</BSModal>
+
+@code {
+    private const string customerApi = "https://localhost:7283/";
+
+    public CreateCustomerRequest CreateCustomer { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnCustomerCreated { get; set; }
+
+    async Task CreateAsync()
+    {
+        await Http.PostAsJsonAsync("api/Customer", CreateCustomer);
+        await OnClose();
+    }
+
+    Task OnClose()
+        => OnCustomerCreated.InvokeAsync();
+}

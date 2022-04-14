@@ -1,0 +1,59 @@
+﻿@using Test.Scopes.App.Models.Customers.Requests
+@inject HttpClient Http
+
+<BSModal IsCentered="true" DataId="updateCustomerModal" OnHide="OnClose">
+    <Header>Update Customer</Header>
+
+    <Content>
+        <div class="mb-3">
+            <BSLabel>Name</BSLabel>
+            <BSInput InputType="InputType.Text" @bind-Value="UpdateCustomer.Name" />
+        </div>
+        <div class="mb-3">
+            <BSLabel>Birth date</BSLabel>
+            <BSInput InputType="InputType.Date" @bind-Value="UpdateCustomer.BirthDate" />
+        </div>
+
+        <div class="mb-3">
+            <BSLabel>E-mail</BSLabel>
+            <BSInput InputType="InputType.Email" @bind-Value="UpdateCustomer.Contact.Email" />
+        </div>
+
+        <div class="mb-3">
+            <BSLabel>Phone</BSLabel>
+            <BSInput InputType="InputType.Tel" @bind-Value="UpdateCustomer.Contact.Phone" />
+        </div>
+    </Content>
+
+    <Footer Context="modal">
+        <BSButton Color="BSColor.Success"
+                  OnClick="async () => {
+                    await modal.HideAsync();
+                    await UpdateAsync();
+                  }">
+            Update
+        </BSButton>
+    </Footer>
+</BSModal>
+
+@code {
+    private const string customerApi = "https://localhost:7283/";
+
+    [Parameter]
+    public long CustomerId { get; set; }
+
+    [Parameter]
+    public UpdateCustomerRequest UpdateCustomer { get; set; }
+
+    [Parameter]
+    public EventCallback OnCustomerUpdated { get; set; }
+
+    async Task UpdateAsync()
+    {
+        await Http.PutAsJsonAsync($"api/Customer/{CustomerId}", UpdateCustomer);
+        await OnClose();
+    }
+
+    Task OnClose()
+        => OnCustomerUpdated.InvokeAsync();
+}

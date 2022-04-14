@@ -1,0 +1,125 @@
+﻿@page "/customer"
+@using Test.Scopes.App.Models.Customers.Requests
+@using Test.Scopes.App.Models.Customers.Responses
+@inject HttpClient Http
+
+<PageTitle>Customer</PageTitle>
+
+<BSButton 
+    Color="BSColor.Primary" 
+    Size="Size.Medium"
+    Target="createCustomer">
+        <span class="oi oi-plus" aria-hidden="true"></span> Novo
+</BSButton>
+
+@if (customers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Birth date</th>
+                <th>E-mail</th>
+                <th>Phone</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customers)
+            {
+                <tr>
+                    <td>@customer.Name</td>
+                    <td>@DateOnly.FromDateTime(customer.BirthDate)</td>
+                    <td>@customer.Email</td>
+                    <td>@customer.Phone</td>
+                    <td>
+                        @if (customer.Active)
+                        {
+                            <BSButton Color="BSColor.Danger"
+                              Size="Size.Small"
+                              OnClick="async () => await Inactivate(customer.Id)">
+                                <span class="oi oi-minus" aria-hidden="true"></span>
+                            </BSButton>
+                        }
+                        else
+                        {
+                            <BSButton Color="BSColor.Success"
+                              Size="Size.Small"
+                              OnClick="async () => await Activate(customer.Id)">
+                                <span class="oi oi-check" aria-hidden="true"></span>
+                            </BSButton>
+                        }
+
+                        <BSButton Color="BSColor.Warning"
+                          Size="Size.Small"
+                          MarginStart="Margins.Small"
+                          Target="updateCustomerModal"
+                          OnClick="() => ShowUpdateModal(customer)">
+                            <span class="oi oi-pencil" aria-hidden="true"></span>
+                        </BSButton>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <Test.Scopes.App.Modal.Customer.UpdateCustomerModal  
+        UpdateCustomer="ToUpdateCustomer" 
+        CustomerId="CustomerId" 
+        OnCustomerUpdated="UpdateCustomers" />
+}
+
+<Test.Scopes.App.Modal.Customer.CreateCustomerModal OnCustomerCreated="UpdateCustomers" />  
+
+@code {
+    private List<RecoverCustomersReponse>? customers;
+    public UpdateCustomerRequest ToUpdateCustomer { get; set; } = new();
+    public long CustomerId { get; set; } = 0;
+
+    private const string customerApi = "https://localhost:7283/";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Http.BaseAddress = new Uri(customerApi);
+        await UpdateCustomers();
+    }
+
+    async Task Activate(long customerId)
+    {
+        await Http.PatchAsync($"api/Customer/{customerId}/activate", null);
+        await UpdateCustomers();
+    }
+
+    async Task Inactivate(long customerId)
+    {
+        await Http.PatchAsync($"api/Customer/{customerId}/inactivate", null);
+        await UpdateCustomers();
+    }
+
+    void ShowUpdateModal(RecoverCustomersReponse customer)
+    {
+        Console.WriteLine("TESTE");
+
+        Console.WriteLine(customer);
+        
+        ToUpdateCustomer = new()
+        {
+            Name = customer.Name,
+            BirthDate = customer.BirthDate,
+            Contact = new()
+            {
+                Email = customer.Email,
+                Phone = customer.Phone
+            }
+        };
+
+        CustomerId = customer.Id;
+    }
+
+    async Task UpdateCustomers()
+        => customers = await Http.GetFromJsonAsync<List<RecoverCustomersReponse>?>("api/Customer");
+}
