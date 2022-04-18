@@ -7,34 +7,35 @@
     <Content>
         <div class="mb-3">
             <BSLabel>Login</BSLabel>
-            <BSInput InputType="InputType.Text" @bind-Value="CreateCustomer.Login" />
+            <BSInput id="login" InputType="InputType.Text" @bind-Value="CreateCustomer.Login" />
         </div>
         <div class="mb-3">
             <BSLabel>Password</BSLabel>
-            <BSInput InputType="InputType.Text" @bind-Value="CreateCustomer.Password" />
+            <BSInput id="password" InputType="InputType.Text" @bind-Value="CreateCustomer.Password" />
         </div>
         <div class="mb-3">
             <BSLabel>Name</BSLabel>
-            <BSInput InputType="InputType.Text" @bind-Value="CreateCustomer.Name" />
+            <BSInput id="name" InputType="InputType.Text" @bind-Value="CreateCustomer.Name" />
         </div>
         <div class="mb-3">
             <BSLabel>Birth date</BSLabel>
-            <BSInput InputType="InputType.Date" @bind-Value="CreateCustomer.BirthDate" />
+            <BSInput id="birth_date" InputType="InputType.Date" @bind-Value="CreateCustomer.BirthDate" />
         </div>
 
         <div class="mb-3">
             <BSLabel>E-mail</BSLabel>
-            <BSInput InputType="InputType.Email" @bind-Value="CreateCustomer.Contact.Email" />
+            <BSInput id="email" InputType="InputType.Email" @bind-Value="CreateCustomer.Contact.Email" />
         </div>
 
         <div class="mb-3">
             <BSLabel>Phone</BSLabel>
-            <BSInput InputType="InputType.Tel" @bind-Value="CreateCustomer.Contact.Phone" />
+            <BSInput id="phone" InputType="InputType.Tel" @bind-Value="CreateCustomer.Contact.Phone" />
         </div>
     </Content>
 
     <Footer Context="modal">
-        <BSButton Color="BSColor.Success"
+        <BSButton id="create_customer_modal"
+                  Color="BSColor.Success"
                   OnClick="async () => {
                     await modal.HideAsync();
                     await CreateAsync();
