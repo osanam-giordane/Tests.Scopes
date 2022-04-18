@@ -14,7 +14,7 @@ But, you can ask me "Why can we not use just Unit Test? It's simple, we need jus
 
 So, the answer it's simple too 😁 But I don't tell you a simple answer, let's think the below scenario:
 
-Imagine that your application has a hundred percent of coverage, and all the tests was built on Unit Scopes, You test the providers methods, entry points and your business logical. It's simple, easy and "fast" to do it. But, in a moment, you need to change a provider. A big part of your test, reference the provider changed, will fail 😕, because you don't use it in the best way...
+Imagine that your application has a hundred percent of coverage, and all the tests was built on Unit Scopes, You test the providers methods, entry points and your business logical. It's simple, easy and "fast" to do it. But, in a moment, you need to change a provider. A big part of your test, reference the provider changed, will fail 😕, because you don't use it in the best way... And, you can't test the complete flow using Unit Test.
 
 To explain this, in more details, let's see this project!
 
