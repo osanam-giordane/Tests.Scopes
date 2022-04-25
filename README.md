@@ -30,3 +30,39 @@ See the next chapter for a look at how we can made all this tests in practice! ð
 ---
 
 ## Let's Code!
+To my domain I represent it like this:
+![domain_layer](/imgs/domain_layer.png)
+
+And I have my Aggregates and Value Objects that contain my business logics, properties, and behaviors:
+![aggregate](/imgs/aggregate.png)
+
+So, this is my application's core! So I need to guarantee this is works very fine and for it, I need to cover a hundred percent with tests! And to do this, I can use of Unit Test scope:
+![unit_test_project](/imgs//unit_test_project.png)
+
+And I can use a behavior strategy to test all my scenario, like this:
+```
+public class CustomerTest
+{
+	[Fact]
+	public void Register_Customer()
+		=> BehaviorExtensions
+			.Given(() => CreateDefaultFakeCustomer())
+			.When(fakeRequest => (request: fakeRequest.Generate(), customer: new Customer()))
+			.Then(tuple => tuple.customer.Register(tuple.request))
+			.And(tuple => tuple.customer)
+			.Then(customer => customer.IsValid.Should().BeTrue())
+			.Then(customer => customer.Id.Should().Be(0));
+
+	[Fact]
+	public void Register_Customer_InvalidBirthDate()
+		=> BehaviorExtensions
+			.Given(() => CreateDefaultFakeCustomer())
+			.When(requestFake => requestFake
+				.RuleFor(customer => customer.BirthDate, Faker => Faker.Date.Recent()))
+			.When(requestFake => requestFake.Generate())
+			.When(request => (request, customer: new Customer()))
+			.Then(tuple => tuple.customer.Register(tuple.request))
+			.And(tuple => tuple.customer)
+			.Then(customer => customer.IsValid.Should().BeFalse());
+}
+```
