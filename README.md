@@ -232,8 +232,6 @@ context('Customers', () => {
 
 ## On Pipeline! 🧿
 
-
-
 ---
 
 ## Summing up
