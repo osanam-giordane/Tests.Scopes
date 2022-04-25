@@ -59,25 +59,6 @@ public class Customer : AggregateRoot<long>
         Validate();
     }
 
-    public void Update(UpdateCustomerRequest request)
-    {
-        Name = request.Name ?? Name;
-        BirthDate = request.BirthDate == default ? BirthDate : DateOnly.FromDateTime(request.BirthDate ?? default);
-
-        if(request.Login != default || request.Password != default)
-        {
-            if (request.Password != default)
-                Credential = new(request.Login ?? Credential.Login, request.Password);
-            else
-                Credential = new(request.Login ?? Credential.Login, Credential.Password);
-        }
-
-        if(request.Contact?.Email != default || request.Contact?.Phone != default)
-            Contact = new(request.Contact?.Email ?? Contact.Email, request.Contact?.Phone ?? Contact.Phone);
-
-        Validate();
-    }
-
     public void Inactivate()
         => Active = false;
 
@@ -89,16 +70,10 @@ public class Customer : AggregateRoot<long>
         Active = true;
     }
 
-    public void Delete()
-    {
-        if (Active is true)
-            return;
-
-        IsDeleted = true;
-    }
-
     protected override bool Validate()
         => OnValidate<CustomerValidator, Customer>();
+
+	// ...
 }
 ```
 
@@ -132,5 +107,152 @@ public class CustomerTest
 			.Then(tuple => tuple.customer.Register(tuple.request))
 			.And(tuple => tuple.customer)
 			.Then(customer => customer.IsValid.Should().BeFalse());
+
+	// ...
 }
 ```
+
+And with a few lines, I can cover all my aggregate (and my value objects, consequently)!
+
+---
+
+## [Let's Code!] Integration Test Scope 🔥
+
+I need to certify that all my providers are configured correctly either. 
+
+So, I have a specific project for it:
+
+![integration_test_project](/imgs//integration_test_project.png)
+
+And for it, I can use the Providers In Memory strategy to verify that my configurations are correct, using Fixtures:
+
+```csharp
+class TestScopesApiFixture : WebApplicationFactory<Program>
+{
+	protected override IHost CreateHost(IHostBuilder builder)
+	{
+		builder.ConfigureServices(services =>
+		{
+			services.RemoveAll(typeof(DbContextOptions<PersistenceDbContext>));
+			services.AddScoped<DbContext, PersistenceDbContext>();
+			services.AddDbContext<PersistenceDbContext>(options
+				=> options.UseInMemoryDatabase("integration_test", new InMemoryDatabaseRoot()));
+		});
+
+		return base.CreateHost(builder);
+	}
+}
+```
+
+I remake my dependency injections and inject mine in-memory providers.
+
+And use like below:
+
+```csharp
+public class CustomerControllerTest
+{
+    [Fact]
+    public async Task RegisterCustomer()
+    {
+        await using var api = new TestScopesApiFixture();
+        var client = api.CreateClient();
+        var request = new Faker<CreateCustomerRequest>("pt_BR")
+            .RuleFor(customer => customer.Name, fake => fake.Person.FullName)
+            .RuleFor(customer => customer.BirthDate, fake => fake.Person.DateOfBirth)
+            .RuleFor(customer => customer.Login, fake => fake.Person.UserName)
+            .RuleFor(customer => customer.Password, fake => fake.Internet.Password())
+            .RuleFor(customer => customer.Contact, fake
+                => new Faker<CreateCustomerRequest.CreateContactRequest>("pt_BR")
+                .RuleFor(contact => contact.Phone, fake => fake.Person.Phone)
+                .RuleFor(contact => contact.Email, fake => fake.Person.Email)
+                .Generate())
+            .Generate();
+
+        var response = await client.PostAsJsonAsync("/api/Customer", request);
+        response.IsSuccessStatusCode.Should().BeTrue();
+    }
+}
+```
+
+For this kind of test, I just do it for main use cases like registering and updating customer. Made like it, I guarantee that providers work fine and my configurations too (the configuration are the same, for real or in-memory providers, for the same type).
+
+---
+
+## [Let's Code!] E2E Test Scope 🔥
+
+Destinate to verify the complex flows and analyze the application behaviors!
+
+![e2e_test_project](/imgs/e2e_test_project.png)
+
+For this, I choose the main use cases and try to cover it, simulate a custmer behavior:
+
+```js
+context('Customers', () => {
+    beforeEach(() => {
+        cy.visit('https://localhost:7184/customer')
+    })
+
+    describe('Verify customers registered', () => {
+        it('Contains 5 customers in list', () => verifyList(5))
+    })
+
+    describe('Register customers', () => {
+        beforeEach(() => cy.get('#create_customer').click())
+
+        it('With a valid fields', () => {
+            cy.get('#login').type('joaodasilva')
+            cy.get('#password').type('12345678')
+            cy.get('#name').type('João da Silva')
+            cy.get('#birth_date').type('1990-02-01')
+            cy.get('#email').type('joao@gmail.com')
+            cy.get('#phone').type('(19) 9880-0102')
+
+            cy.get('#create_customer_modal').click()
+
+            verifyList(6)
+        })
+
+        it('With invalid name', () => {
+            cy.get('#login').type('joaodasilva')
+            cy.get('#password').type('12345678')
+            cy.get('#name').type('JP')
+            cy.get('#birth_date').type('1990-02-01')
+            cy.get('#email').type('joao@gmail.com')
+            cy.get('#phone').type('(19) 9880-0102')
+
+            cy.get('#create_customer_modal').click()
+
+            verifyList(6)
+        })
+    })
+})
+```
+
+---
+
+## On Pipeline! 🧿
+
+
+
+---
+
+## Summing up
+* Unit Tests
+	* test just my domain
+* Integration Tests
+	* verify the providers configuration
+	* isolated use cases
+	* application servicer behaviors
+	* ex.: how many times the provider was called?
+* E2E tests:
+	* most critical use cases
+	* complete flow
+		* ex.: since interface until storage data
+
+---
+
+# References:
+- [The Practical Test Pyramid - Martin Fowler](https://martinfowler.com/articles/practical-test-pyramid.html)
+- [E2E Testing - Code With Engineering Playbook](https://microsoft.github.io/code-with-engineering-playbook/automated-testing/e2e-testing/)
+- [Unit vs Integration vs System vs E2E Testing - Code With Engineering Playbook](https://microsoft.github.io/code-with-engineering-playbook/automated-testing/e2e-testing/testing-comparison/)
+- [Domain-Driven Design & Unit Tests](https://www.jamesmichaelhickey.com/ddd-unit-tests/)
