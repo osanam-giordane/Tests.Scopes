@@ -29,18 +29,86 @@ See the next chapter for a look at how we can made all this tests in practice! ð
 
 ---
 
-## Let's Code!
+## [Let's Code!] Unit Test Scope ðŸ”¥
 To my domain I represent it like this:
+
 ![domain_layer](/imgs/domain_layer.png)
 
 And I have my Aggregates and Value Objects that contain my business logics, properties, and behaviors:
-![aggregate](/imgs/aggregate.png)
+
+```csharp
+public class Customer : AggregateRoot<long>
+{
+    public string Name { get; private set; }
+
+    public DateOnly BirthDate { get; private set; }
+
+    public Credential Credential { get; private set; }
+
+    public Contact Contact { get; private set; }
+
+    public void Register(CreateCustomerRequest request)
+    {
+        Name = request.Name;
+        BirthDate = DateOnly.FromDateTime(request.BirthDate);
+        Active = request.Active;
+
+        Credential = new Credential(request.Login, request.Password);
+        Contact = new Contact(request.Contact.Email, request.Contact.Phone);
+        
+        Validate();
+    }
+
+    public void Update(UpdateCustomerRequest request)
+    {
+        Name = request.Name ?? Name;
+        BirthDate = request.BirthDate == default ? BirthDate : DateOnly.FromDateTime(request.BirthDate ?? default);
+
+        if(request.Login != default || request.Password != default)
+        {
+            if (request.Password != default)
+                Credential = new(request.Login ?? Credential.Login, request.Password);
+            else
+                Credential = new(request.Login ?? Credential.Login, Credential.Password);
+        }
+
+        if(request.Contact?.Email != default || request.Contact?.Phone != default)
+            Contact = new(request.Contact?.Email ?? Contact.Email, request.Contact?.Phone ?? Contact.Phone);
+
+        Validate();
+    }
+
+    public void Inactivate()
+        => Active = false;
+
+    public void Activate()
+    {
+        if (IsDeleted is true)
+            return;
+
+        Active = true;
+    }
+
+    public void Delete()
+    {
+        if (Active is true)
+            return;
+
+        IsDeleted = true;
+    }
+
+    protected override bool Validate()
+        => OnValidate<CustomerValidator, Customer>();
+}
+```
 
 So, this is my application's core! So I need to guarantee this is works very fine and for it, I need to cover a hundred percent with tests! And to do this, I can use of Unit Test scope:
+
 ![unit_test_project](/imgs//unit_test_project.png)
 
 And I can use a behavior strategy to test all my scenario, like this:
-```
+
+```csharp
 public class CustomerTest
 {
 	[Fact]
