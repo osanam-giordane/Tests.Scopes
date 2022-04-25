@@ -254,3 +254,4 @@ context('Customers', () => {
 - [E2E Testing - Code With Engineering Playbook](https://microsoft.github.io/code-with-engineering-playbook/automated-testing/e2e-testing/)
 - [Unit vs Integration vs System vs E2E Testing - Code With Engineering Playbook](https://microsoft.github.io/code-with-engineering-playbook/automated-testing/e2e-testing/testing-comparison/)
 - [Domain-Driven Design & Unit Tests](https://www.jamesmichaelhickey.com/ddd-unit-tests/)
+- [Introducing BDD - Dan North & Associates LTd](http://dannorth.net/introducing-bdd/)
