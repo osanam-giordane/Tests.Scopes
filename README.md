@@ -1,6 +1,6 @@
 # Test Scopes
 
-To cover our application, we have many types of tests for it. So, before we start to talk about this application, let's analyze the test pyramid:
+To cover our application, we have many types of tests for it. So, let's analyze the test pyramid:
 
 ![test pyramid](https://res.cloudinary.com/practicaldev/image/fetch/s--dcM0135C--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/ealtg2m79jiaur0ryb3v.png)
 
@@ -14,16 +14,19 @@ But, you can ask me "Why can we not use just Unit Test? It's simple, we need jus
 
 So, the answer it's simple too 😁 But I don't tell you a simple answer, let's think the below scenario:
 
-Imagine that your application has a hundred percent of coverage, and all the tests was built on Unit Scopes, You test the providers methods, entry points and your business logical. It's simple, easy and "fast" to do it. But, in a moment, you need to change a provider. A big part of your test, reference the provider changed, will fail 😕, because you don't use it in the best way... And, you can't test the complete flow using Unit Test.
+Imagine that your application has a hundred percent of coverage, and all the tests was built on Unit Scopes: You test the providers methods, entry points and your business logical. It's simple, easy and "fast" to do it. But, if in a moment, you need to change a provider. A big part of your test, reference the provider changed, will fail 😕, because you don't use it in the best way...
 
-To explain this, in more details, let's see this project!
+Looking for our project, how can we divide the tests to cover all application?
+
+1. For the core/domain: 
+	If we were guided for use Domain-Driven Design, we'll have Aggregates, Entities, and Value Objects that contain our representative world: business rules, properties, and behaviors. So it's interesting we cover a hundred percent and for it we can use Unit Tests, that is low cost and fast to build.
+2. For the providers:
+	The service layer uses the domain and providers to do something in our application. So, to guarantee the connection for these providers, we can get some main use cases to test the connections, like message brokers, APIs, and databases. We can use some In Memory strategies or mock the connection in our dependency injection to validate our connection configuration, and for it, we can use Fixture.
+3. For complete flow:
+	Our application has a front-end client. For it, we can use the e2e test! And to build this, we can containerize the providers, configure all our environment in a docker-compose, and run it in our pipeline.
+
+See the next chapter for a look at how we can made all this tests in practice! 👀
 
 ---
-### About the project
-I built this project based on Domain-Driven Design. So, in my API, I have a layer that represents my business logic, and there, I've Aggregates, Entities and Value Objects (in this case, I just have an Aggregate and Value Objects): 
 
-![domain layer](/imgs/domain_layer.png)
-
-Besides that, I've other layers that represent a connection to provider and a layer to represent my application service, that use Domain and Provider to do something:
-
-![other layers](/imgs/other_layers.png)
+## Let's Code!
