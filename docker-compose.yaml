@@ -17,6 +17,8 @@ services:
     environment:
       SA_PASSWORD: "!MyStrongPassword"
       ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
   e2e:
     image: cypress
     build: ./Test.Scopes.E2E
