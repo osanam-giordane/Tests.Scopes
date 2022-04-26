@@ -25,3 +25,7 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Build the stack
       run: docker-compose up -d
+    - name: Run E2E
+      run: docker-compose up --abort-on-container-exit --exit-code-from e2e
+    - name: Get E2E results
+      run: cat e2e/cypress/results/output.xml

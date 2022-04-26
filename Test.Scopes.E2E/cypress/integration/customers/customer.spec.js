@@ -2,7 +2,7 @@
 
 context('Customers', () => {
     beforeEach(() => {
-        cy.visit('https://localhost:7184/customer')
+        cy.visit('https://localhost:8000/customer')
     })
 
     describe('Verify customers registered', () => {

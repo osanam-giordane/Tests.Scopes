@@ -17,3 +17,17 @@ services:
     environment:
       SA_PASSWORD: "!MyStrongPassword"
       ACCEPT_EULA: "Y"
+  e2e:
+    image: cypress
+    build: ./Test.Scopes.E2E
+    container_name: cypress
+    depends_on:
+      - web
+      - api
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Stage
+    command: npx cypress run
+    volumes:
+      - ./Test.Scopes.E2E/cypress:/app/cypress
+      - ./Test.Scopes.E2E/cypress.json:/app/cypress.json
