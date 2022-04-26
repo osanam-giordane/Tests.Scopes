@@ -21,11 +21,11 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Unit Test
+      run: dotnet test ~/Test.Scopes.UnitTest/Test.Scopes.UnitTest.csproj --no-build --verbosity normal
     - name: Build the stack
       run: docker-compose up -d
-    - name: Run E2E
+    - name: E2E Test
       run: docker-compose up --abort-on-container-exit --exit-code-from e2e
     - name: Get E2E results
       run: cat e2e/cypress/results/output.xml
