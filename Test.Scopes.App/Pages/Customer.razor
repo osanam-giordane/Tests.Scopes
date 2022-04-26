@@ -1,7 +1,11 @@
 ﻿@page "/customer"
+@using Microsoft.Extensions.Options
+@using System.Text.Json.Serialization
+@using System.Text.Json
 @using Test.Scopes.App.Models.Customers.Requests
 @using Test.Scopes.App.Models.Customers.Responses
 @inject HttpClient Http
+@inject IConfiguration Configuration
 
 <PageTitle>Customer</PageTitle>
 
@@ -81,11 +85,12 @@ else
     public UpdateCustomerRequest ToUpdateCustomer { get; set; } = new();
     public long CustomerId { get; set; } = 0;
 
-    private const string customerApi = "https://localhost:7283/";
-
     protected override async Task OnInitializedAsync()
     {
-        Http.BaseAddress = new Uri(customerApi);
+        var bffBaseAddress = Configuration.GetSection("BffBaseAddress").Value;
+        Console.WriteLine(bffBaseAddress);
+
+        Http.BaseAddress = new Uri(bffBaseAddress);
         await UpdateCustomers();
     }
 

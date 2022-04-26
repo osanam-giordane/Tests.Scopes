@@ -2,7 +2,6 @@ using Bogus;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using Test.Scopes.Domain.Aggregates.Customers;
 using Test.Scopes.Domain.Interfaces.Handlers;
 using Test.Scopes.Domain.Interfaces.Persistence;
 using Test.Scopes.Domain.Models.Customers.CreateCustomer;
@@ -11,6 +10,19 @@ using Test.Scopes.Infra.Persistence;
 using Test.Scopes.Services.Customers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.WebHost.UseDefaultServiceProvider((context, options) =>
+{
+    options.ValidateScopes = context.HostingEnvironment.IsDevelopment();
+    options.ValidateOnBuild = true;
+});
+
+builder.WebHost.ConfigureAppConfiguration(configurationBuilder =>
+{
+    configurationBuilder
+        .AddEnvironmentVariables();
+});
 
 builder.Services
     .AddControllers()
