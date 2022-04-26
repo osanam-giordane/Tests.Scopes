@@ -28,7 +28,7 @@ jobs:
       run: dotnet build --no-restore
 
     - name: Build Stack
-      run: docker-compose up -d
+      run: docker-compose build
 
     - name: Unit Test
       run: dotnet test Test.Scopes.UnitTest --no-build --verbosity normal
