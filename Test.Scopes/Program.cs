@@ -47,11 +47,14 @@ if (app.Environment.IsDevelopment() ||
     using var scope = app.Services.CreateScope();
     await using var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
 
-    await dbContext.Database.EnsureDeletedAsync();
-    await dbContext.Database.MigrateAsync();
-    await dbContext.Database.EnsureCreatedAsync();
+    if (dbContext.Database.IsRelational())
+    {
+        await dbContext.Database.EnsureDeletedAsync();
+        await dbContext.Database.MigrateAsync();
+        await dbContext.Database.EnsureCreatedAsync();
 
-    await DataSeed(scope.ServiceProvider.GetRequiredService<ICreateCustomerHandler>());
+        await DataSeed(scope.ServiceProvider.GetRequiredService<ICreateCustomerHandler>());
+    }
 }
 
 app.UseSwagger();
