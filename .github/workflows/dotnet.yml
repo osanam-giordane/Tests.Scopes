@@ -22,7 +22,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Unit Test
-      run: dotnet test Test.Scopes.UnitTest\Test.Scopes.UnitTest.csproj --no-build --verbosity normal
+      run: dotnet test Test.Scopes.UnitTest --no-build --verbosity normal
     - name: Build the stack
       run: docker-compose up -d
     - name: E2E Test
