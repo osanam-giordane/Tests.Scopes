@@ -11,6 +11,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      ASPNETCORE_ENVIRONMENT: Staging
+
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
@@ -32,7 +35,7 @@ jobs:
 
     - name: Integration Test
       run: dotnet test Test.Scopes.IntegrationTest --no-build --verbosity normal
-      
+
     - name: E2E Test
       run: docker-compose up --abort-on-container-exit --exit-code-from e2e
     - name: Get E2E results
