@@ -8,15 +8,10 @@ WORKDIR /src
 COPY . ./
 
 RUN dotnet restore 
-
-COPY . ./
-
-WORKDIR /app
-
-RUN dotnet build -c Release --no-restore -v m -o /app/build
+RUN dotnet build -c Release --no-restore -v m -o /build
 
 FROM build AS publish
-RUN dotnet publish -c Release --no-restore -v m -o /app/publish
+RUN dotnet publish -c Release --no-restore -v m -o /publish
 
 FROM nginx:alpine AS final
-COPY --from=publish /app/publish/wwwroot ./usr/share/nginx/html
+COPY --from=publish /publish/wwwroot ./usr/share/nginx/html
