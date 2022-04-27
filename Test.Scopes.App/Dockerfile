@@ -1,13 +1,21 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
-WORKDIR /app
+ARG SDK_VERSION="6.0.100-alpine3.15"
+ARG BASE_ADRESS="mcr.microsoft.com/dotnet"
 
-COPY . ./
+FROM $BASE_ADRESS/sdk:$SDK_VERSION AS build
 
-RUN dotnet restore
+WORKDIR /src
 
-RUN dotnet publish -c Release -o out
+COPY ./Test.Scopes.App/*.csproj ./Test.Scopes.App/
+RUN dotnet restore -v m ./Test.Scopes.App
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0
-WORKDIR /app
-COPY --from=build-env /app/out .
-ENTRYPOINT ["dotnet", "Test.Scopes.App.dll"]
+COPY ./Test.Scopes.App/. ./Test.Scopes.App/
+
+WORKDIR /Test.Scopes.App
+
+RUN dotnet build -c Release --no-restore -v m -o /app/build
+
+FROM build AS publish
+RUN dotnet publish -c Release --no-restore -v m -o /app/publish
+
+FROM nginx:alpine AS final
+COPY --from=publish /app/publish/wwwroot ./usr/share/nginx/html

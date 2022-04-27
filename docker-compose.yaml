@@ -4,12 +4,20 @@ services:
     build:
       context: .
       dockerfile: ./Test.Scopes.App/Dockerfile
+    depends_on:
+      - api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Staging
     ports:
       - "8000:8000"
   api:
     build:
       context: .
       dockerfile: ./Test.Scopes/Dockerfile
+    depends_on:
+      - db
+    environment:
+      ASPNETCORE_ENVIRONMENT: Staging
     ports:
       - "5000:5000"
   db:
