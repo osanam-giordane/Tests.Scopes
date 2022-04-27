@@ -5,12 +5,13 @@ FROM $BASE_ADRESS/sdk:$SDK_VERSION AS build
 
 WORKDIR /src
 
-COPY ./Test.Scopes.App/*.csproj ./Test.Scopes.App/
-RUN dotnet restore -v m ./Test.Scopes.App
+COPY . ./
 
-COPY ./Test.Scopes.App/. ./Test.Scopes.App/
+RUN dotnet restore 
 
-WORKDIR /Test.Scopes.App
+COPY . ./
+
+WORKDIR /app
 
 RUN dotnet build -c Release --no-restore -v m -o /app/build
 
