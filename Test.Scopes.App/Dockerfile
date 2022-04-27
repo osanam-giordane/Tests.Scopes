@@ -1,4 +1,4 @@
-ARG SDK_VERSION="6.0.100-alpine3.15"
+ARG SDK_VERSION="6.0.100-alpine3.14"
 ARG BASE_ADRESS="mcr.microsoft.com/dotnet"
 
 FROM $BASE_ADRESS/sdk:$SDK_VERSION AS build
