@@ -13,11 +13,14 @@ public class CreateCustomerHandler : ICreateCustomerHandler
     public CreateCustomerHandler(ICustomerService service)
         => _service = service;
 
-    public Task<long> Handle(CreateCustomerRequest request, CancellationToken cancellationToken)
+    public async Task<long> Handle(CreateCustomerRequest request, CancellationToken cancellationToken)
     {
         var customer = new Customer();
         customer.Register(request);
 
-        return _service.SaveAsync(customer, cancellationToken);
+        if (customer.IsValid is false)
+            return default;
+
+        return await _service.SaveAsync(customer, cancellationToken);
     }
 }

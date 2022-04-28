@@ -24,8 +24,6 @@ public class Customer : AggregateRoot<long>
 
         Credential = new Credential(request.Login, request.Password);
         Contact = new Contact(request.Contact.Email, request.Contact.Phone);
-        
-        Validate();
     }
 
     public void Update(UpdateCustomerRequest request)
@@ -43,8 +41,6 @@ public class Customer : AggregateRoot<long>
 
         if(request.Contact?.Email != default || request.Contact?.Phone != default)
             Contact = new(request.Contact?.Email ?? Contact.Email, request.Contact?.Phone ?? Contact.Phone);
-
-        Validate();
     }
 
     public void Inactivate()

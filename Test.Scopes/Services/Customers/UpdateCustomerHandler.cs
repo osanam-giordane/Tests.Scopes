@@ -21,6 +21,9 @@ namespace Test.Scopes.Services.Customers
 
             customer.Update(request);
 
+            if (customer.IsValid is false)
+                return;
+
             await _service.SaveAsync(customer, cancellationToken);
         }
     }
