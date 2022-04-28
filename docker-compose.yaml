@@ -1,5 +1,21 @@
 version: "3.9"
 services:
+  db:
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+      SA_PASSWORD: "!MyStrongPassword"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433"
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$SA_PASSWORD" -Q "SELECT 1" || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - internal
+
   web:
     build:
       context: .
@@ -10,26 +26,23 @@ services:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
       - "8000:8000"
+    networks:
+      - internal
 
   api:
     build:
       context: .
       dockerfile: ./Test.Scopes/Dockerfile
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
-      - "5000:5000"
+      - "5000"
+    networks:
+      - internal
 
-  db:
-    image: "mcr.microsoft.com/mssql/server"
-    environment:
-      SA_PASSWORD: "!MyStrongPassword"
-      ACCEPT_EULA: "Y"
-    ports:
-      - "1433:1433"
-      
   e2e:
     image: cypress
     build: ./Test.Scopes.E2E
@@ -44,3 +57,10 @@ services:
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
       - ./Test.Scopes.E2E/cypress.json:/app/cypress.json
+    networks:
+      - internal
+
+networks:
+  internal:
+    name: internal
+    driver: bridge
