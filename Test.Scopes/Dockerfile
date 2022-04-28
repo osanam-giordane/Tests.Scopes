@@ -6,9 +6,7 @@ COPY ./Test.Scopes/*.csproj ./Test.Scopes/
 
 RUN dotnet restore -v m ./Test.Scopes/
 
-COPY ./src/Test.Scopes/. ./Test.Scopes/
-
-WORKDIR /src/Test.Scopes
+WORKDIR /Test.Scopes
 
 RUN dotnet build -c Release --no-restore -v m -o /app/build
 
