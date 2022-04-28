@@ -16,20 +16,6 @@ services:
     networks:
       - internal
 
-  web:
-    image: web:latest
-    build:
-      context: .
-      dockerfile: ./Test.Scopes.App/Dockerfile
-    depends_on:
-      - api
-    environment:
-      ASPNETCORE_ENVIRONMENT: Staging
-    ports:
-      - "8000"
-    networks:
-      - internal
-
   api:
     image: api:latest
     build:
@@ -45,6 +31,20 @@ services:
     networks:
       - internal
 
+  web:
+    image: web:latest
+    build:
+      context: .
+      dockerfile: ./Test.Scopes.App/Dockerfile
+    depends_on:
+      - api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Staging
+    ports:
+      - "8000"
+    networks:
+      - internal
+
   e2e:
     image: cypress
     build: ./Test.Scopes.E2E
@@ -53,8 +53,6 @@ services:
       - web
       - api
       - db
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Stage
     command: npx cypress run
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
