@@ -10,6 +10,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
       - "8000:8000"
+
   api:
     build:
       context: .
@@ -20,6 +21,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
       - "5000:5000"
+
   db:
     image: "mcr.microsoft.com/mssql/server"
     environment:
@@ -27,6 +29,7 @@ services:
       ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
+      
   e2e:
     image: cypress
     build: ./Test.Scopes.E2E

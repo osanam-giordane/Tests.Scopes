@@ -232,6 +232,16 @@ context('Customers', () => {
 
 ## On Pipeline! 🧿
 
+To run all this steps, I can build a pipeline that contains the follow steps:
+1. Build my application
+2. Run my Unit Tests
+    * Calculate the code coverage, excluding all that not unit test scopes (providers, for example)
+3. Run my Integration Tests
+    * Calculate the code coverage, excluding all that not integration test scopes (domain, for example)
+4. And run my docker-compose and execute my E2E Tests
+
+You can see it on [Github Actions](https://github.com/alexalvess/Tests.Scopes/actions)
+
 ---
 
 ## Summing up
