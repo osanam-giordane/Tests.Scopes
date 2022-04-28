@@ -17,6 +17,7 @@ services:
       - internal
 
   web:
+    image: web:latest
     build:
       context: .
       dockerfile: ./Test.Scopes.App/Dockerfile
@@ -30,6 +31,7 @@ services:
       - internal
 
   api:
+    image: api:latest
     build:
       context: .
       dockerfile: ./Test.Scopes/Dockerfile
