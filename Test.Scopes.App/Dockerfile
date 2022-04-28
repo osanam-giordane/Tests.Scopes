@@ -5,7 +5,7 @@ FROM $BASE_ADRESS/sdk:$SDK_VERSION AS build
 
 WORKDIR /src
 
-COPY . ./
+COPY ./Test.Scopes.App/*.csproj ./
 
 RUN dotnet restore 
 RUN dotnet build -c Release --no-restore -v m -o /build
