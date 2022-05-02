@@ -51,7 +51,7 @@ services:
       - internal
 
   e2e:
-    image: cypress
+    image: "cypress/included:3.2.0"
     build: ./Test.Scopes.E2E
     container_name: cypress
     depends_on:
