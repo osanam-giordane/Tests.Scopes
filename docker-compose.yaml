@@ -58,7 +58,7 @@ services:
       - web
       - api
       - db
-    command: npx cypress run
+    command: npx cypress run --browser firefox
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
       - ./Test.Scopes.E2E/cypress.json:/app/cypress.json
