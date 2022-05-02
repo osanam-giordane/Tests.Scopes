@@ -51,7 +51,7 @@ services:
       - internal
 
   e2e:
-    image: "cypress/included:3.2.0"
+    image: cypress
     build: ./Test.Scopes.E2E
     container_name: cypress
     depends_on:
@@ -60,7 +60,7 @@ services:
       - db
     environment:
       - CYPRESS_baseUrl=http://web:5000/customer
-    command: npx cypress run --browser electron
+    command: npx cypress run
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
       - ./Test.Scopes.E2E/cypress.json:/app/cypress.json
