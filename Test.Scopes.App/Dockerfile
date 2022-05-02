@@ -5,7 +5,7 @@ FROM $BASE_ADRESS/sdk:$SDK_VERSION AS build
 
 WORKDIR /src
 
-EXPOSE 8000
+EXPOSE 5000
 
 COPY ./Test.Scopes.App/*.csproj ./Test.Scopes.App/
 

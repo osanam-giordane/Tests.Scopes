@@ -33,6 +33,9 @@ builder.Services
     });
 
 builder.Services
+    .AddHealthChecks();
+
+builder.Services
     .AddScoped<DbContext, PersistenceDbContext>()
     .AddDbContext<PersistenceDbContext>();
 
@@ -84,6 +87,8 @@ app.UseRouting().UseCors(e =>
     e.AllowAnyMethod();
     e.AllowAnyHeader();
 });
+
+app.UseHealthChecks("/health");
 
 app.Run();
 

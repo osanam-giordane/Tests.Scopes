@@ -27,7 +27,12 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
-      - "5000"
+      - "80"
+    healthcheck:
+      test: curl --silent --fail http://localhost:80/health || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 3
     networks:
       - internal
 
@@ -41,7 +46,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
-      - "8000"
+      - "5000"
     networks:
       - internal
 
