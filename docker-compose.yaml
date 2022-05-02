@@ -58,6 +58,8 @@ services:
       - web
       - api
       - db
+    environment:
+      - CYPRESS_baseUrl=http://web:5000
     command: npx cypress run --browser electron
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
