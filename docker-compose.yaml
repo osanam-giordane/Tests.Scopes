@@ -1,5 +1,18 @@
 version: "3.9"
 services:
+  web:
+    image: web:latest
+    build:
+      context: .
+      dockerfile: ./Test.Scopes.App/Dockerfile
+    container_name: web
+    environment:
+      ASPNETCORE_ENVIRONMENT: Staging
+    ports:
+      - "8080:8080"
+    networks:
+      - internal
+
   db:
     image: "mcr.microsoft.com/mssql/server"
     environment:
@@ -38,26 +51,7 @@ services:
     networks:
       - internal
 
-  web:
-    image: web:latest
-    build:
-      context: .
-      dockerfile: ./Test.Scopes.App/Dockerfile
-    container_name: web
-    depends_on:
-      api:
-        condition: service_healthy
-    environment:
-      ASPNETCORE_ENVIRONMENT: Staging
-    ports:
-      - "8080:8080"
-    healthcheck:
-      test: curl --silent --fail https://web:8080/ || exit 1
-      interval: 5s
-      timeout: 10s
-      retries: 3
-    networks:
-      - internal
+  
 
   e2e:
     image: cypress
