@@ -66,8 +66,7 @@ services:
       dockerfile: ./Test.Scopes.E2E/Dockerfile
     container_name: cypress
     depends_on:
-      web:
-        condition: service_healthy
+      - web
     environment:
       - CYPRESS_baseUrl=http://web:8080/customer
     command: sleep 10; npx cypress run
