@@ -6,7 +6,7 @@ services:
       SA_PASSWORD: "!MyStrongPassword"
       ACCEPT_EULA: "Y"
     ports:
-      - "1433"
+      - "1433:1433"
     healthcheck:
       test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$SA_PASSWORD" -Q "SELECT 1" || exit 1
       interval: 5s
@@ -27,7 +27,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
-      - "80"
+      - "5000:5000"
     healthcheck:
       test: curl --silent --fail http://localhost:80/health || exit 1
       interval: 5s
@@ -46,7 +46,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
-      - "5000:5000"
+      - "8080:8080"
     networks:
       - internal
 
@@ -59,7 +59,7 @@ services:
       - api
       - db
     environment:
-      - CYPRESS_baseUrl=https://web:5000/customer
+      - CYPRESS_baseUrl=https://web:8080/customer
     command: npx cypress run
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
