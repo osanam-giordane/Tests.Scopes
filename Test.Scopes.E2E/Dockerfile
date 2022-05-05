@@ -7,7 +7,7 @@ COPY ./Test.Scopes.E2E/cypress.json ./Test.Scopes.E2E/
 COPY ./Test.Scopes.E2E/package.json ./Test.Scopes.E2E/
 COPY ./Test.Scopes.E2E/package-lock.json ./Test.Scopes.E2E/
 
-WORKDIR ./app/Test.Scopes.E2E
+WORKDIR ./Test.Scopes.E2E
 
 ENV CI=1
 
