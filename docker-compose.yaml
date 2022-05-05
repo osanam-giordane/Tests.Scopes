@@ -64,7 +64,7 @@ services:
       web:
         condition: service_started
     environment:
-      - CYPRESS_baseUrl=https://web:80
+      CYPRESS_baseUrl: https://web:80
     command: npx cypress run
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
