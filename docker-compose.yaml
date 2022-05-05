@@ -45,7 +45,8 @@ services:
       dockerfile: ./Test.Scopes.App/Dockerfile
     container_name: web
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
@@ -65,9 +66,8 @@ services:
       dockerfile: ./Test.Scopes.E2E/Dockerfile
     container_name: cypress
     depends_on:
-      - web
-      - api
-      - db
+      web:
+        condition: service_healthy
     environment:
       - CYPRESS_baseUrl=http://web:8080/customer
     command: npx cypress run
