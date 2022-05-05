@@ -64,7 +64,7 @@ services:
       web:
         condition: service_started
     environment:
-      - CYPRESS_baseUrl=https://web
+      - CYPRESS_baseUrl=http://web:80
     command: npx cypress run
     working_dir: /e2e
     volumes:
