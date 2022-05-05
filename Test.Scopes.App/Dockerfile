@@ -19,4 +19,3 @@ RUN dotnet publish -c Release --no-restore -v m -o /publish
 
 FROM nginx:alpine AS final
 COPY --from=publish /publish/wwwroot ./usr/share/nginx/html
-EXPOSE 80
