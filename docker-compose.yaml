@@ -51,11 +51,6 @@ services:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
       - "8080:80"
-    healthcheck:
-      test: curl --silent --fail https://web:8080/ || exit 1
-      interval: 5s
-      timeout: 10s
-      retries: 3
     networks:
       - internal
 
@@ -66,7 +61,8 @@ services:
       dockerfile: ./Test.Scopes.E2E/Dockerfile
     container_name: cypress
     depends_on:
-      - web
+      web:
+        condition: service_started
     environment:
       - CYPRESS_baseUrl=https://web:8080/customer
     command: sleep 10; npx cypress run
