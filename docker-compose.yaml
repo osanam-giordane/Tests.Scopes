@@ -66,6 +66,7 @@ services:
     environment:
       - CYPRESS_baseUrl=https://web
     command: npx cypress run
+    working_dir: /e2e
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
       - ./Test.Scopes.E2E/cypress.json:/app/cypress.json
