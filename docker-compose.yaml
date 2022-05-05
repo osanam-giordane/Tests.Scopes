@@ -52,7 +52,7 @@ services:
     ports:
       - "8080:8080"
     healthcheck:
-      test: curl --silent --fail http://web:8080 || exit 1
+      test: curl --silent --fail http://web:8080/ || exit 1
       interval: 5s
       timeout: 10s
       retries: 3
