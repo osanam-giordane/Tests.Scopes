@@ -29,7 +29,7 @@ services:
     ports:
       - "5000:5000"
     healthcheck:
-      test: curl --silent --fail http://api:8080/health || exit 1
+      test: curl --silent --fail http://api:5000/health || exit 1
       interval: 5s
       timeout: 10s
       retries: 3
@@ -47,6 +47,11 @@ services:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
       - "8080:8080"
+    healthcheck:
+      test: curl --silent --fail http://web:8080 || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 3
     networks:
       - internal
 
