@@ -27,6 +27,7 @@ services:
       db:
         condition: service_healthy
     environment:
+      # ASPNETCORE_URLS: http://*:5000
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
       - "5000:5000"
@@ -48,6 +49,7 @@ services:
       api:
         condition: service_started
     environment:
+      ASPNETCORE_URLS: http://*:80
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
       - "80"
@@ -64,7 +66,7 @@ services:
       web:
         condition: service_started
     environment:
-      - CYPRESS_baseUrl=http://localhost:80
+      - CYPRESS_baseUrl=http://web:80
     command: npx cypress run
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
