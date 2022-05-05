@@ -1,9 +1,12 @@
 FROM cypress/base:14
+
 WORKDIR /app
 
-COPY package.json .
-COPY package-lock.json .
+COPY ./cypress ./cypress
+COPY ./cypress.json ./cypress.json
+COPY ./package.json ./package.json
+COPY ./package-lock.json ./package-lock.json
 
 ENV CI=1
-RUN npm ci
-RUN npx cypress verify
+
+RUN npm i && npx cypress run
