@@ -68,7 +68,7 @@ services:
     depends_on:
       - web
     environment:
-      - CYPRESS_baseUrl=http://web:8080/customer
+      - CYPRESS_baseUrl=https://web:8080/customer
     command: sleep 10; npx cypress run
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
