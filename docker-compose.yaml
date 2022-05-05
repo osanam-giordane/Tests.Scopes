@@ -46,7 +46,7 @@ services:
     container_name: web
     depends_on:
       api:
-        condition: service_started
+        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
