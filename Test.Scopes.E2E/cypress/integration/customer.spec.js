@@ -6,7 +6,10 @@ context('Customers', () => {
     })
 
     describe('Verify customers registered', () => {
-        it('Contains 5 customers in list', () => verifyList(5))
+        it('Contains 5 customers in list', () => {
+            cy.wait(10000)
+            verifyList(5)
+        })
     })
 
     describe('Register customers', () => {
