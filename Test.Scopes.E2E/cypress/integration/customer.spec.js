@@ -2,7 +2,7 @@
 
 context('Customers', () => {
     beforeEach(() => {
-        cy.visit(Cypress.env('baseUrl') + '/customer')
+        cy.visit('/customer')
     })
 
     describe('Verify customers registered', () => {
