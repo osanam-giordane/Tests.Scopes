@@ -1,8 +1,6 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0.0-alpine3.14 AS base
 WORKDIR /app
 
-HEALTHCHECK --interval=2s --timeout=3s --retries=3 CMD curl --silent --fail http://localhost:80/health || exit 1
-
 RUN apk add --no-cache icu-libs
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
