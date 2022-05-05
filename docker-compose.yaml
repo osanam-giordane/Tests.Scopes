@@ -26,10 +26,12 @@ services:
         condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
+      SERVER: db
+      PORT: 1433
     ports:
       - "5000:5000"
     healthcheck:
-      test: curl --silent --fail http://localhost:80/health || exit 1
+      test: curl --silent --fail http://api:8080/health || exit 1
       interval: 5s
       timeout: 10s
       retries: 3
