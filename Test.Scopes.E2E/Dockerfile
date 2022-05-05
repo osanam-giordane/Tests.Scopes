@@ -9,4 +9,5 @@ COPY ./Test.Scopes.E2E/package-lock.json ./Test.Scopes.E2E/
 
 WORKDIR ./Test.Scopes.E2E
 
-RUN npm i && npx cypress run
+RUN npm ci
+RUN npx cypress verify
