@@ -50,7 +50,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
-      - "80"
+      - "8080:80"
     networks:
       - internal
 
@@ -64,7 +64,7 @@ services:
       web:
         condition: service_started
     environment:
-      - CYPRESS_baseUrl=https://web:80
+      - CYPRESS_baseUrl=https://web:8080
     command: npx cypress run
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
