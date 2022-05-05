@@ -46,7 +46,7 @@ services:
     container_name: web
     depends_on:
       api:
-        condition: service_healthy
+        condition: service_started
     environment:
       ASPNETCORE_ENVIRONMENT: Staging
     ports:
@@ -65,7 +65,7 @@ services:
         condition: service_started
     environment:
       - CYPRESS_baseUrl=https://web:80/customer
-    command: sleep 10; npx cypress run
+    command: npx cypress run
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
       - ./Test.Scopes.E2E/cypress.json:/app/cypress.json
