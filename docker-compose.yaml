@@ -52,14 +52,16 @@ services:
 
   e2e:
     image: cypress
-    build: ./Test.Scopes.E2E
+    build:
+      context: .
+      dockerfile: ./Test.Scopes.E2E/Dockerfile
     container_name: cypress
     depends_on:
       - web
       - api
       - db
     environment:
-      - CYPRESS_baseUrl=https://web:8080/customer
+      - CYPRESS_baseUrl=http://web:8080/customer
     command: npx cypress run
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
