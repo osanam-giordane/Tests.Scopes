@@ -25,9 +25,8 @@ services:
       db:
         condition: service_healthy
     environment:
-      ASPNETCORE_ENVIRONMENT: Staging
-      SERVER: db
-      PORT: 1433
+      - ASPNETCORE_ENVIRONMENT: Staging
+      - Persistence: Server=db,1433;Database=test_scopes_persistence;User Id=sa;Password=!MyStrongPassword;
     ports:
       - "5000:5000"
     healthcheck:
