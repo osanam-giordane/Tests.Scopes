@@ -1,5 +1,5 @@
 {
     "env":{
-        "baseUrl": "https://localhost:7184/customer"
+        "baseUrl": "https://localhost:7184"
     }
 }
