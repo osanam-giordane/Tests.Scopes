@@ -70,7 +70,7 @@ services:
         condition: service_healthy
     environment:
       - CYPRESS_baseUrl=http://web:8080/customer
-    command: npx cypress run
+    command: sleep 10; npx cypress run
     volumes:
       - ./Test.Scopes.E2E/cypress:/app/cypress
       - ./Test.Scopes.E2E/cypress.json:/app/cypress.json
