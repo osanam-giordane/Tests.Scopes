@@ -1,4 +1,4 @@
-FROM cypress/base:14.17.6-slim
+FROM cypress/base:12.18.2
 
 WORKDIR /app
 
